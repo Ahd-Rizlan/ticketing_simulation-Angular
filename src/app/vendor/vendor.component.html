@@ -1,2 +1,153 @@
-<h1 class="text-success">This Work's</h1>
-<button class="btn btn-primary">Bootstrap Button</button>
+<div class="container pt-5 pb-5 my-5 border">
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="h2">Create Vendor</div>
+    <div class="container pt-3 pb-3 px-3 py-3">
+      <form id="vendorForm">
+        <!-- Number of Tickets Per Release -->
+        <div class="row mb-3">
+          <label
+            for="inputNumber"
+            class="col-12 col-form-label"
+            style="color: #333"
+            >Number Of Tickets Per Release</label
+          >
+          <div class="col-12">
+            <input
+              type="text"
+              <!--
+              Change
+              to
+              text
+              to
+              allow
+              pattern
+              validation
+              --
+            />
+            class="form-control form-control-sm" id="inputNumber"
+            pattern="^\d+$"
+            <!-- Only digits are allowed -->
+            title="Only numeric values are allowed"
+            <!-- Tooltip for invalid input -->
+            required
+            <!-- Field is required -->
+            />
+            <div class="invalid-feedback">
+              Please enter a valid number of tickets.
+            </div>
+          </div>
+        </div>
+
+        <!-- Frequency Slider with Range Value Display -->
+        <div class="row mb-3">
+          <label
+            for="inputFrequency"
+            class="col-12 col-form-label"
+            style="color: #333"
+            >Frequency</label
+          >
+          <div class="col-12">
+            <input
+              type="range"
+              class="form-range"
+              id="inputFrequency"
+              min="1"
+              max="10"
+              value="5"
+              step="1"
+            />
+            <div class="d-flex justify-content-between">
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+              <span>6</span>
+              <span>7</span>
+              <span>8</span>
+              <span>9</span>
+              <span>10</span>
+            </div>
+            <div class="pt-2">
+              <span id="frequencyValue" class="fw-bold">5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-control {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  .container {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  label {
+    font-weight: 500;
+  }
+
+  .form-check-label {
+    color: #555;
+  }
+
+  .form-range {
+    width: 100%;
+  }
+
+  .d-flex {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .form-range {
+    margin-bottom: 10px;
+  }
+
+  /* Add red border on invalid input */
+  input:invalid {
+    border-color: red;
+  }
+
+  /* Add styling to show invalid input (when not matching the pattern) */
+  input:invalid + .invalid-feedback {
+    display: block;
+  }
+
+  /* Responsive Grid */
+  @media (max-width: 767px) {
+    .col-12 {
+      max-width: 100%;
+    }
+
+    .h2 {
+      font-size: 24px;
+      text-align: center;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .col-md-8 {
+      max-width: 66.6667%;
+    }
+  }
+</style>
