@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.model';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './vendor.component.html',
   styleUrl: './vendor.component.css',
 })
-export class VendorComponent {
+export class VendorComponent implements OnInit {
   constructor(private vendorService: VendorService) {}
 
   newVendor: Vendor = { frequency: 0, ticketsPerRelease: 0 };
@@ -19,6 +19,10 @@ export class VendorComponent {
   responceMessage: string = '';
   isSuccessful: boolean = false;
   vendorList: Vendor[] = [];
+
+  ngOnInit() {
+    this.getAllVendors();
+  }
 
   //default pre-setting Values
   //creating a new method  which returnss nothing and calls the createVendor method from the vendorService to create new vendor
