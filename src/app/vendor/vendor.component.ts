@@ -18,6 +18,7 @@ export class VendorComponent {
 
   responceMessage: string = '';
   isSuccessful: boolean = false;
+  vendorList: Vendor[] = [];
 
   //default pre-setting Values
   //creating a new method  which returnss nothing and calls the createVendor method from the vendorService to create new vendor
@@ -33,5 +34,11 @@ export class VendorComponent {
                                    Tickets per release: ${createdVendor.ticketsPerRelease}, 
                                    Frequency: ${createdVendor.frequency} seconds.`;
       });
+  }
+
+  getAllVendors() {
+    this.vendorService.getAllVendors().subscribe((vendors) => {
+      this.vendorList = vendors;
+    });
   }
 }

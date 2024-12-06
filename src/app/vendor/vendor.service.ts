@@ -11,4 +11,7 @@ export class VendorService {
   createVendor(newVendor: Vendor): Observable<Vendor> {
     return this.httpClient.post<Vendor>(this.apiUrl, newVendor);
   }
+  getAllVendors(): Observable<Vendor[]> {
+    return this.httpClient.get<Vendor[]>(this.apiUrl);
+  }
 }
