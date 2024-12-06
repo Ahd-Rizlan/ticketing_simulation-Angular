@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class VendorService {
-  apiUrl = 'http://localhost:8080/vendor';
+  apiUrl = 'http://localhost:8080/api/vendor';
   constructor(private httpClient: HttpClient) {}
 
   createVendor(newVendor: Vendor): Observable<Vendor> {
