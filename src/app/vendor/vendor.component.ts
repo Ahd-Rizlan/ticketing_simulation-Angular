@@ -16,11 +16,10 @@ export class VendorComponent implements OnInit {
 
   newVendor: Vendor = { frequency: 0, ticketsPerRelease: 0 };
 
-  responceMessage: string = '';
+  responseMessage: string = '';
   isSuccessful: boolean = false;
   vendorList: Vendor[] = [];
   editVendor: Vendor | null = null;
-  deletedVendor: Vendor | null = null;
   updatedVendor: Vendor = { frequency: 0, ticketsPerRelease: 0 };
 
   ngOnInit() {
@@ -37,7 +36,7 @@ export class VendorComponent implements OnInit {
       .subscribe((createdVendor) => {
         this.newVendor = { frequency: 0, ticketsPerRelease: 0 };
         this.isSuccessful = true;
-        this.responceMessage = `Vendor ID: created successfully!  
+        this.responseMessage = `Vendor ID: created successfully!  
                                    Tickets per release: ${createdVendor.ticketsPerRelease}, 
                                    Frequency: ${createdVendor.frequency} seconds.`;
         this.vendorList.push(createdVendor);
@@ -71,7 +70,7 @@ export class VendorComponent implements OnInit {
 
           this.editVendor = null;
           this.isSuccessful = true;
-          this.responceMessage = `Vendor ID: ${updatedVendor.vendorId} updated successfully! 
+          this.responseMessage = `Vendor ID: ${updatedVendor.vendorId} updated successfully! 
                                    Tickets per release: ${updatedVendor.ticketsPerRelease}, 
                                    Frequency: ${updatedVendor.frequency} seconds.`;
           // this.getAllVendors();
@@ -93,9 +92,8 @@ export class VendorComponent implements OnInit {
           this.cancelEdit();
         }
       });
-      this.deletedVendor = null;
       this.isSuccessful = true;
-      this.responceMessage = `Vendor ID: ${vendorId} deleted successfully!`;
+      this.responseMessage = `Vendor ID: ${vendorId} deleted successfully!`;
     }
   }
 }
