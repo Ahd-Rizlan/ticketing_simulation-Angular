@@ -1,1 +1,272 @@
-<p>customer works!</p>
+<div class="container-fluid">
+  <div class="d-flex">
+    <!-- Form Section -->
+    <div class="form-container w-50 me-auto">
+      <div class="container pt-5 pb-5 my-5 border">
+        <div
+          class="d-flex flex-column justify-content-center align-items-center"
+        >
+          <div class="h2">Create Customer</div>
+          <div class="container pt-4 pb-4 px-5 py-5">
+            <form (ngSubmit)="createCustomer()" id="customerForm">
+              <!-- Tickets Per Purchase -->
+              <div class="row mb-3">
+                <label
+                  for="inputTickets"
+                  class="col-12 col-form-label"
+                  style="color: #333"
+                >
+                  Tickets Per Purchase
+                </label>
+                <div class="col-12">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    id="inputTickets"
+                    [(ngModel)]="newCustomer.ticketsPerPurchase"
+                    name="ticketsPerPurchase"
+                    pattern="^\\d+$"
+                    title="Only numeric values are allowed"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter a valid number of tickets.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Retrieval Interval Slider -->
+              <div class="row mb-3">
+                <label
+                  for="inputRetrievalInterval"
+                  class="col-12 col-form-label"
+                  style="color: #333"
+                >
+                  Retrieval Interval
+                </label>
+                <div class="col-12">
+                  <input
+                    type="range"
+                    class="form-range"
+                    id="inputRetrievalInterval"
+                    [(ngModel)]="newCustomer.retrievalInterval"
+                    name="retrievalInterval"
+                    min="1"
+                    max="10"
+                    value="5"
+                    step="1"
+                  />
+                  <div class="d-flex justify-content-between">
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                    <span>10</span>
+                  </div>
+                  <div class="pt-2 text-center">
+                    <span
+                      id="intervalValue"
+                      class="fw-bold d-flex justify-content-center align-items-center"
+                    >
+                      <span class="h6 me-2">{{
+                        newCustomer.retrievalInterval
+                      }}</span>
+                      <p class="h6 mb-0">Seconds</p>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VIP Dropdown -->
+              <div class="row mb-3">
+                <label
+                  for="isVip"
+                  class="col-12 col-form-label"
+                  style="color: #333"
+                >
+                  Customer Type
+                </label>
+                <div class="col-12">
+                  <select
+                    class="form-select"
+                    [(ngModel)]="newCustomer.isVip"
+                    name="isVip"
+                  >
+                    <option [ngValue]="true">VIP</option>
+                    <option [ngValue]="false">Regular</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="row mb-3 justify-content-center">
+                <div
+                  class="col-auto"
+                  *ngIf="
+                    newCustomer.ticketsPerPurchase > 0 &&
+                    newCustomer.retrievalInterval > 0
+                  "
+                >
+                  <button type="submit" class="btn btn-primary custom-button">
+                    Create Customer
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <!-- Response Message -->
+            <div
+              *ngIf="isSuccessful"
+              class="alert alert-success mt-3"
+              role="alert"
+            >
+              {{ responseMessage }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer List Section -->
+    <div class="customer-list-container border-start p-4 text-center">
+      <h3 class="text-center">Customer List</h3>
+      <div *ngIf="!(customerList.length > 0)">
+        <h3>No Customers Found</h3>
+      </div>
+
+      <div
+        class="d-flex"
+        [ngClass]="{
+          'justify-content-between': editCustomer,
+          'justify-content-center': !editCustomer
+        }"
+      >
+        <!-- Customer List -->
+        <div
+          [class.w-50]="editCustomer"
+          [class.w-100]="!editCustomer"
+          class="me-3"
+          *ngIf="customerList.length > 0"
+        >
+          <ul class="list-group" *ngFor="let customer of customerList">
+            <li class="list-group-item bg-secondary text-light">
+              <div class="row">
+                <div class="col-6">
+                  <p>
+                    <strong>
+                      {{ customer.customerId }} - Tickets Per Purchase:
+                      {{ customer.ticketsPerPurchase }} - Retrieval Interval:
+                      {{ customer.retrievalInterval }} Seconds - VIP:
+                      {{ customer.isVip == false ? "VIP" : "Regular" }}
+                    </strong>
+                  </p>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-light"
+                    (click)="editCustomerDetails(customer)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="btn btn-danger mx-3"
+                    (click)="deleteCustomer(customer.customerId)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Edit Customer Details Form -->
+        <div *ngIf="editCustomer" class="w-50 border-start ps-3">
+          <h4>Edit Customer Details</h4>
+          <form (ngSubmit)="updateCustomer()">
+            <!-- Edit Tickets Per Purchase -->
+            <label for="editTicketsPerPurchase" class="form-label">
+              Edit Tickets Per Purchase
+            </label>
+            <div class="form-group mb-3">
+              <input
+                type="number"
+                [(ngModel)]="updatedCustomer.ticketsPerPurchase"
+                name="editTicketsPerPurchase"
+                id="editTicketsPerPurchase"
+                class="form-control"
+                required
+              />
+            </div>
+
+            <!-- Edit Retrieval Interval Slider -->
+            <label for="editRetrievalInterval" class="form-label">
+              Edit Retrieval Interval
+            </label>
+            <div class="form-group">
+              <input
+                type="range"
+                class="form-range"
+                id="editRetrievalInterval"
+                [(ngModel)]="updatedCustomer.retrievalInterval"
+                name="editRetrievalInterval"
+                min="1"
+                max="10"
+                step="1"
+              />
+              <div class="d-flex justify-content-between mt-1">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+                <span>6</span>
+                <span>7</span>
+                <span>8</span>
+                <span>9</span>
+                <span>10</span>
+              </div>
+              <div class="pt-2 text-center">
+                <span
+                  id="intervalValue"
+                  class="fw-bold d-flex justify-content-center align-items-center"
+                >
+                  <span class="h6 me-2">{{
+                    updatedCustomer.retrievalInterval
+                  }}</span>
+                  <p class="h6 mb-0">Seconds</p>
+                </span>
+              </div>
+            </div>
+
+            <!-- VIP Dropdown -->
+            <label for="editIsVip" class="form-label">Edit Customer Type</label>
+            <div class="form-group">
+              <select
+                class="form-select"
+                [(ngModel)]="updatedCustomer.isVip"
+                name="editIsVip"
+              >
+                <option [ngValue]="true">VIP</option>
+                <option [ngValue]="false">Regular</option>
+              </select>
+            </div>
+
+            <!-- Submit and Cancel Buttons -->
+            <button type="submit" class="btn btn-success mt-3 mx-3">
+              Update Customer
+            </button>
+            <button class="btn btn-danger mt-3" (click)="cancelEdit()">
+              Cancel
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

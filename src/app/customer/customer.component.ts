@@ -24,6 +24,7 @@ export class CustomerComponent implements OnInit {
   isSuccessful: boolean = false;
   customerList: Customer[] = [];
   editCustomer: Customer | null = null;
+
   updatedCustomer: Customer = {
     isVip: false,
     ticketsPerPurchase: 0,
@@ -43,9 +44,12 @@ export class CustomerComponent implements OnInit {
           retrievalInterval: 0,
         };
         this.isSuccessful = true;
-        this.responseMessage = `Customer ID: created successfully!  
-                                   Tickets per purchase: ${createdCustomer.ticketsPerPurchase}, 
-                                   Retrieval interval: ${createdCustomer.retrievalInterval} seconds.`;
+        this.responseMessage = `Customer ID: ${
+          createdCustomer.customerId
+        } created successfully!
+        VIP: ${createdCustomer.isVip ? 'VIP' : 'Regular'},    
+        Tickets per purchase: ${createdCustomer.ticketsPerPurchase}, 
+        Retrieval interval: ${createdCustomer.retrievalInterval} seconds.`;
         this.customerList.push(createdCustomer);
       }
     );
