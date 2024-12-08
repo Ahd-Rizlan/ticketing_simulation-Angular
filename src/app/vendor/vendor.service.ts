@@ -14,4 +14,13 @@ export class VendorService {
   getAllVendors(): Observable<Vendor[]> {
     return this.httpClient.get<Vendor[]>(this.apiUrl);
   }
+  updateVendor(vendorId: String, updatedVendor: Vendor): Observable<Vendor> {
+    return this.httpClient.put<Vendor>(
+      this.apiUrl + '/' + vendorId,
+      updatedVendor
+    );
+  }
+  deleteVendor(vendorId: String) {
+    return this.httpClient.delete(this.apiUrl + '/' + vendorId);
+  }
 }

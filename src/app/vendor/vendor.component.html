@@ -107,24 +107,121 @@
         </div>
       </div>
     </div>
-
-    <!-- Vendor List Section -->
-    <div class="vendor-list-container w-50 border-start p-4 text-center">
+    <div class="vendor-list-container border-start p-4 text-center">
       <h3 class="text-center">Vendor List</h3>
       <div *ngIf="!(vendorList.length > 0)">
         <h3>No Vendors Found</h3>
       </div>
-      <div *ngIf="vendorList.length > 0">
-        <ul class="list-group" *ngFor="let vendor of vendorList">
-          <li class="list-group-item bg-secondary text-light">
-            <div class="row">
-              <div class="col-6">
-                <p>{{ vendor.vendorId }}</p>
+
+      <div
+        class="d-flex"
+        [ngClass]="{
+          'justify-content-between': editVendor,
+          'justify-content-center': !editVendor
+        }"
+      >
+        <!-- Vendor List -->
+        <div
+          [class.w-50]="editVendor"
+          [class.w-100]="!editVendor"
+          class="me-3"
+          *ngIf="vendorList.length > 0"
+        >
+          <ul class="list-group" *ngFor="let vendor of vendorList">
+            <li class="list-group-item bg-secondary text-light">
+              <div class="row">
+                <div class="col-6">
+                  <p>
+                    <strong>
+                      {{ vendor.vendorId }} - No Of Tickets Per Release:
+                      {{ vendor.ticketsPerRelease }} - With Frequency Of:
+                      {{ vendor.frequency }} Seconds
+                    </strong>
+                  </p>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-light"
+                    (click)="editVendorDetails(vendor)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="btn btn-danger mx-3"
+                    (click)="deleteVendor(vendor.vendorId)"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div class="col-6">deit</div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Edit Vendor Details Form -->
+        <div *ngIf="editVendor" class="w-50 border-start ps-3">
+          <h4>Edit Vendor Details</h4>
+          <form (ngSubmit)="updateVendor()">
+            <!-- Edit Tickets Per Release -->
+            <label for="editTicketsPerRelease" class="form-label"
+              >Edit Tickets Per Release</label
+            >
+            <div class="form-group mb-3">
+              <input
+                type="number"
+                [(ngModel)]="updatedVendor.ticketsPerRelease"
+                name="editTicketsPerRelease"
+                id="editTicketsPerRelease"
+                class="form-control"
+                required
+              />
             </div>
-          </li>
-        </ul>
+
+            <!-- Edit Frequency Slider -->
+            <label for="editFrequency" class="form-label">Edit Frequency</label>
+            <div class="form-group">
+              <input
+                type="range"
+                class="form-range"
+                id="editFrequency"
+                [(ngModel)]="updatedVendor.frequency"
+                name="editFrequency"
+                min="1"
+                max="10"
+                step="1"
+              />
+              <div class="d-flex justify-content-between mt-1">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+                <span>6</span>
+                <span>7</span>
+                <span>8</span>
+                <span>9</span>
+                <span>10</span>
+              </div>
+              <div class="pt-2 text-center">
+                <span
+                  id="frequencyValue"
+                  class="fw-bold d-flex justify-content-center align-items-center"
+                >
+                  <span class="h6 me-2">{{ updatedVendor.frequency }}</span>
+                  <p class="h6 mb-0">Seconds</p>
+                </span>
+              </div>
+            </div>
+
+            <!-- Submit and Cancel Buttons -->
+            <button type="submit" class="btn btn-success mt-3 mx-3">
+              Update Vendor
+            </button>
+            <button class="btn btn-danger mt-3" (click)="cancelEdit()">
+              Cancel
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

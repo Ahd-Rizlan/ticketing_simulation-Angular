@@ -19,6 +19,9 @@ export class VendorComponent implements OnInit {
   responceMessage: string = '';
   isSuccessful: boolean = false;
   vendorList: Vendor[] = [];
+  editVendor: Vendor | null = null;
+  deletedVendor: Vendor | null = null;
+  updatedVendor: Vendor = { frequency: 0, ticketsPerRelease: 0 };
 
   ngOnInit() {
     this.getAllVendors();
@@ -37,6 +40,7 @@ export class VendorComponent implements OnInit {
         this.responceMessage = `Vendor ID: created successfully!  
                                    Tickets per release: ${createdVendor.ticketsPerRelease}, 
                                    Frequency: ${createdVendor.frequency} seconds.`;
+        this.vendorList.push(createdVendor);
       });
   }
 
@@ -44,5 +48,54 @@ export class VendorComponent implements OnInit {
     this.vendorService.getAllVendors().subscribe((vendors) => {
       this.vendorList = vendors;
     });
+  }
+
+  //editing the vendor
+  editVendorDetails(vendor: Vendor) {
+    this.editVendor = vendor; //assigning the vendor to editVendor
+    this.updatedVendor = { ...vendor }; //copy of old vendor to updatedVendor
+  }
+
+  updateVendor(): void {
+    if (this.editVendor) {
+      this.vendorService
+        .updateVendor(this.editVendor.vendorId!, this.updatedVendor)
+        .subscribe((updatedVendor) => {
+          const idVendor = this.vendorList.findIndex(
+            (Vendor) => Vendor.vendorId === updatedVendor.vendorId
+          );
+          if (idVendor !== -1) {
+            this.vendorList[idVendor] = updatedVendor;
+            //close Form
+          }
+
+          this.editVendor = null;
+          this.isSuccessful = true;
+          this.responceMessage = `Vendor ID: ${updatedVendor.vendorId} updated successfully! 
+                                   Tickets per release: ${updatedVendor.ticketsPerRelease}, 
+                                   Frequency: ${updatedVendor.frequency} seconds.`;
+          // this.getAllVendors();
+        });
+    }
+  }
+  cancelEdit() {
+    this.editVendor = null;
+    this.updatedVendor = { frequency: 0, ticketsPerRelease: 0 };
+  }
+
+  deleteVendor(vendorId: any) {
+    if (confirm('Are you sure you want to delete this vendor?')) {
+      this.vendorService.deleteVendor(vendorId).subscribe(() => {
+        this.vendorList = this.vendorList.filter(
+          (vendor) => vendor.vendorId !== vendorId
+        );
+        if (this.editVendor && this.editVendor.vendorId === vendorId) {
+          this.cancelEdit();
+        }
+      });
+      this.deletedVendor = null;
+      this.isSuccessful = true;
+      this.responceMessage = `Vendor ID: ${vendorId} deleted successfully!`;
+    }
   }
 }
