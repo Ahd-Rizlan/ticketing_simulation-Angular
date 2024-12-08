@@ -14,26 +14,26 @@ import { Customer } from './customer.model';
 export class CustomerComponent implements OnInit {
   constructor(private CustomerService: CustomerService) {}
 
-  newCustomer: Customer = {
-    isVip: false,
-    ticketsPerPurchase: 0,
-    retrievalInterval: 0,
-  };
+  ngOnInit() {
+    this.getAllCustomers();
+  }
 
   responseMessage: string = '';
   isSuccessful: boolean = false;
   customerList: Customer[] = [];
   editCustomer: Customer | null = null;
 
-  updatedCustomer: Customer = {
+  newCustomer: Customer = {
     isVip: false,
     ticketsPerPurchase: 0,
     retrievalInterval: 0,
   };
 
-  ngOnInit() {
-    this.getAllCustomers();
-  }
+  updatedCustomer: Customer = {
+    isVip: false,
+    ticketsPerPurchase: 0,
+    retrievalInterval: 0,
+  };
 
   createCustomer() {
     this.CustomerService.createCustomer(this.newCustomer).subscribe(
@@ -44,12 +44,9 @@ export class CustomerComponent implements OnInit {
           retrievalInterval: 0,
         };
         this.isSuccessful = true;
-        this.responseMessage = `Customer ID: ${
-          createdCustomer.customerId
-        } created successfully!
-        VIP: ${createdCustomer.isVip ? 'VIP' : 'Regular'},    
-        Tickets per purchase: ${createdCustomer.ticketsPerPurchase}, 
-        Retrieval interval: ${createdCustomer.retrievalInterval} seconds.`;
+        this.responseMessage = `Customer ID: ${createdCustomer.customerId} created successfully!
+                                   Tickets per purchase: ${createdCustomer.ticketsPerPurchase}, 
+                                   Retrieval interval: ${createdCustomer.retrievalInterval} seconds.`;
         this.customerList.push(createdCustomer);
       }
     );
@@ -63,7 +60,6 @@ export class CustomerComponent implements OnInit {
 
   editCustomerDetails(customer: Customer) {
     this.editCustomer = customer;
-    this.updatedCustomer = { ...customer };
   }
 
   updateCustomer(): void {

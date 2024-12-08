@@ -57,16 +57,9 @@
                     step="1"
                   />
                   <div class="d-flex justify-content-between">
-                    <span>1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
-                    <span>9</span>
-                    <span>10</span>
+                    <span>1</span><span>2</span><span>3</span><span>4</span>
+                    <span>5</span><span>6</span><span>7</span><span>8</span>
+                    <span>9</span><span>10</span>
                   </div>
                   <div class="pt-2 text-center">
                     <span
@@ -82,24 +75,32 @@
                 </div>
               </div>
 
-              <!-- VIP Dropdown -->
+              <!-- VIP Checkbox with additional styling -->
               <div class="row mb-3">
                 <label
                   for="isVip"
                   class="col-12 col-form-label"
                   style="color: #333"
                 >
-                  Customer Type
+                  VIP Customer
                 </label>
                 <div class="col-12">
-                  <select
-                    class="form-select"
-                    [(ngModel)]="newCustomer.isVip"
-                    name="isVip"
-                  >
-                    <option [ngValue]="true">VIP</option>
-                    <option [ngValue]="false">Regular</option>
-                  </select>
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="isVip"
+                      [(ngModel)]="newCustomer.isVip"
+                      name="isVip"
+                    />
+                    <label class="form-check-label" for="isVip">
+                      {{
+                        newCustomer.isVip
+                          ? "VIP Status: VIP"
+                          : "VIP Status: Regular"
+                      }}
+                    </label>
+                  </div>
                 </div>
               </div>
 
@@ -146,7 +147,7 @@
           'justify-content-center': !editCustomer
         }"
       >
-        <!-- Customer List -->
+        <!-- Customer List with VIP Highlighting -->
         <div
           [class.w-50]="editCustomer"
           [class.w-100]="!editCustomer"
@@ -154,16 +155,24 @@
           *ngIf="customerList.length > 0"
         >
           <ul class="list-group" *ngFor="let customer of customerList">
-            <li class="list-group-item bg-secondary text-light">
+            <li
+              class="list-group-item"
+              [ngClass]="{
+                'bg-warning text-dark': customer.isVip,
+                'bg-secondary text-light': !customer.isVip
+              }"
+            >
               <div class="row">
                 <div class="col-6">
                   <p>
                     <strong>
                       {{ customer.customerId }} - Tickets Per Purchase:
                       {{ customer.ticketsPerPurchase }} - Retrieval Interval:
-                      {{ customer.retrievalInterval }} Seconds - VIP:
-                      {{ customer.isVip == false ? "VIP" : "Regular" }}
+                      {{ customer.retrievalInterval }} Seconds
                     </strong>
+                    <span *ngIf="customer.isVip" class="badge bg-danger ms-2">
+                      VIP
+                    </span>
                   </p>
                 </div>
                 <div class="col-6">
@@ -220,16 +229,9 @@
                 step="1"
               />
               <div class="d-flex justify-content-between mt-1">
-                <span>1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-                <span>6</span>
-                <span>7</span>
-                <span>8</span>
-                <span>9</span>
-                <span>10</span>
+                <span>1</span><span>2</span><span>3</span><span>4</span>
+                <span>5</span><span>6</span><span>7</span><span>8</span>
+                <span>9</span><span>10</span>
               </div>
               <div class="pt-2 text-center">
                 <span
@@ -244,17 +246,23 @@
               </div>
             </div>
 
-            <!-- VIP Dropdown -->
-            <label for="editIsVip" class="form-label">Edit Customer Type</label>
-            <div class="form-group">
-              <select
-                class="form-select"
+            <!-- Edit VIP Status with Switch -->
+            <label for="editIsVip" class="form-label">Edit VIP Status</label>
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
                 [(ngModel)]="updatedCustomer.isVip"
                 name="editIsVip"
-              >
-                <option [ngValue]="true">VIP</option>
-                <option [ngValue]="false">Regular</option>
-              </select>
+                id="editIsVip"
+              />
+              <label class="form-check-label" for="editIsVip">
+                {{
+                  updatedCustomer.isVip
+                    ? "VIP Status: VIP"
+                    : "VIP Status: Regular"
+                }}
+              </label>
             </div>
 
             <!-- Submit and Cancel Buttons -->
