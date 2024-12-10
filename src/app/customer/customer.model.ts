@@ -1,6 +1,6 @@
-export interface Customer {
-  customerId?: String;
-  isVip: boolean;
-  ticketsPerPurchase: number;
-  retrievalInterval: number;
-}
+// export interface Customer {
+//   customerId?: String;
+//   isVip: boolean;
+//   ticketsPerPurchase: number;
+//   retrievalInterval: number;
+// }

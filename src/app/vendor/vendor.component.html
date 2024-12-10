@@ -54,7 +54,15 @@
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary mt-3">Create</button>
+        <button
+          *ngIf="
+            newVendors.numberOfVendors > 0 || newVendors.ticketsPerRelease > 0
+          "
+          type="submit"
+          class="btn btn-primary mt-3"
+        >
+          Create
+        </button>
       </form>
 
       <!-- Success Message -->

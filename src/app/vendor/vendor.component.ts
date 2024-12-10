@@ -27,17 +27,10 @@ export class VendorComponent {
       )
       .subscribe((createdVendor) => {
         // Assign the returned data to the local variables
-        console.log(this.newVendors.numberOfVendors);
-
         // Reset the form
         this.newVendors = { numberOfVendors: 0, ticketsPerRelease: 0 };
         this.isSuccessful = true;
-        console.log(
-          'Vendor created successfully!' +
-            this.createVendors +
-            ' ' +
-            this.ticketsPerReleaseBySingleVendor
-        );
+        console.log('Vendor created successfully!');
         // Set the success message (optional, shown in template)
         this.responseMessage = `Vendors created successfully!`;
       });

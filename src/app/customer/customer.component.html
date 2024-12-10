@@ -1,279 +1,98 @@
-<div class="container-fluid">
-  <div class="d-flex">
-    <!-- Form Section -->
-    <div class="form-container w-50 me-auto">
-      <div class="container pt-5 pb-5 my-5 border">
-        <div
-          class="d-flex flex-column justify-content-center align-items-center"
-        >
-          <div class="h2">Create Customer</div>
-          <div class="container pt-4 pb-4 px-5 py-5">
-            <form (ngSubmit)="createCustomer()" id="customerForm">
-              <!-- Tickets Per Purchase -->
-              <div class="row mb-3">
-                <label
-                  for="inputTickets"
-                  class="col-12 col-form-label"
-                  style="color: #333"
-                >
-                  Tickets Per Purchase
-                </label>
-                <div class="col-12">
-                  <input
-                    type="text"
-                    class="form-control form-control-sm"
-                    id="inputTickets"
-                    [(ngModel)]="newCustomer.ticketsPerPurchase"
-                    name="ticketsPerPurchase"
-                    pattern="^\\d+$"
-                    title="Only numeric values are allowed"
-                    required
-                  />
-                  <div class="invalid-feedback">
-                    Please enter a valid number of tickets.
-                  </div>
-                </div>
-              </div>
+<div
+  class="container-fluid d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
+  <div class="form-container w-50">
+    <div class="container border p-5">
+      <div class="text-center mb-4">
+        <h2>Create Customer</h2>
+      </div>
 
-              <!-- Retrieval Interval Slider -->
-              <div class="row mb-3">
-                <label
-                  for="inputRetrievalInterval"
-                  class="col-12 col-form-label"
-                  style="color: #333"
-                >
-                  Retrieval Interval
-                </label>
-                <div class="col-12">
-                  <input
-                    type="range"
-                    class="form-range"
-                    id="inputRetrievalInterval"
-                    [(ngModel)]="newCustomer.retrievalInterval"
-                    name="retrievalInterval"
-                    min="1"
-                    max="10"
-                    value="5"
-                    step="1"
-                  />
-                  <div class="d-flex justify-content-between">
-                    <span>1</span><span>2</span><span>3</span><span>4</span>
-                    <span>5</span><span>6</span><span>7</span><span>8</span>
-                    <span>9</span><span>10</span>
-                  </div>
-                  <div class="pt-2 text-center">
-                    <span
-                      id="intervalValue"
-                      class="fw-bold d-flex justify-content-center align-items-center"
-                    >
-                      <span class="h6 me-2">{{
-                        newCustomer.retrievalInterval
-                      }}</span>
-                      <p class="h6 mb-0">Seconds</p>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- VIP Checkbox with additional styling -->
-              <div class="row mb-3">
-                <label
-                  for="isVip"
-                  class="col-12 col-form-label"
-                  style="color: #333"
-                >
-                  VIP Customer
-                </label>
-                <div class="col-12">
-                  <div class="form-check form-switch">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="isVip"
-                      [(ngModel)]="newCustomer.isVip"
-                      name="isVip"
-                    />
-                    <label class="form-check-label" for="isVip">
-                      {{
-                        newCustomer.isVip
-                          ? "VIP Status: VIP"
-                          : "VIP Status: Regular"
-                      }}
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Submit Button -->
-              <div class="row mb-3 justify-content-center">
-                <div
-                  class="col-auto"
-                  *ngIf="
-                    newCustomer.ticketsPerPurchase > 0 &&
-                    newCustomer.retrievalInterval > 0
-                  "
-                >
-                  <button type="submit" class="btn btn-primary custom-button">
-                    Create Customer
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            <!-- Response Message -->
-            <div
-              *ngIf="isSuccessful"
-              class="alert alert-success mt-3"
-              role="alert"
-            >
-              {{ responseMessage }}
-            </div>
+      <form
+        (ngSubmit)="createCustomer()"
+        id="customerForm"
+        class="d-flex flex-column justify-content-center align-items-center"
+      >
+        <!-- Number of Customers Input -->
+        <div class="row mb-3 w-75">
+          <label for="inputCustomers" class="col-form-label text-center">
+            Number of Customers
+          </label>
+          <input
+            type="number"
+            id="inputCustomers"
+            [(ngModel)]="newCustomer.NumberOFCustomers"
+            name="numberOfCustomers"
+            class="form-control"
+            min="1"
+            step="1"
+            required
+          />
+          <div class="invalid-feedback">
+            Please enter a valid number of customers.
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Customer List Section -->
-    <div class="customer-list-container border-start p-4 text-center">
-      <h3 class="text-center">Customer List</h3>
-      <div *ngIf="!(customerList.length > 0)">
-        <h3>No Customers Found</h3>
-      </div>
+        <!-- Total Tickets Per Purchase Input -->
+        <div class="row mb-3 w-75">
+          <label for="inputTickets" class="col-form-label text-center">
+            Tickets Per Purchase
+          </label>
+          <input
+            type="number"
+            id="inputTickets"
+            [(ngModel)]="newCustomer.TicketsPerPurchase"
+            name="ticketsPerPurchase"
+            class="form-control"
+            min="1"
+            step="1"
+            required
+          />
+          <div class="invalid-feedback">
+            Please enter a valid number of tickets per purchase.
+          </div>
+        </div>
 
-      <div
-        class="d-flex"
-        [ngClass]="{
-          'justify-content-between': editCustomer,
-          'justify-content-center': !editCustomer
-        }"
-      >
-        <!-- Customer List with VIP Highlighting -->
-        <div
-          [class.w-50]="editCustomer"
-          [class.w-100]="!editCustomer"
-          class="me-3"
-          *ngIf="customerList.length > 0"
+        <!-- VIP or Regular Dropdown -->
+        <div class="row mb-3 w-75">
+          <label for="inputCustomerType" class="col-form-label text-center">
+            Customer Type
+          </label>
+          <select
+            id="inputCustomerType"
+            [(ngModel)]="newCustomer.isVip"
+            name="customerType"
+            class="form-control"
+            required
+          >
+            <option value="false">Regular</option>
+            <option value="true">VIP</option>
+          </select>
+          <div class="invalid-feedback">
+            Please select a valid customer type.
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          *ngIf="
+            newCustomer.NumberOFCustomers > 0 ||
+            newCustomer.TicketsPerPurchase > 0
+          "
+          type="submit"
+          class="btn btn-primary mt-3"
         >
-          <ul class="list-group" *ngFor="let customer of customerList">
-            <li
-              class="list-group-item"
-              [ngClass]="{
-                'bg-warning text-dark': customer.isVip,
-                'bg-secondary text-light': !customer.isVip
-              }"
-            >
-              <div class="row">
-                <div class="col-6">
-                  <p>
-                    <strong>
-                      {{ customer.customerId }} - Tickets Per Purchase:
-                      {{ customer.ticketsPerPurchase }} - Retrieval Interval:
-                      {{ customer.retrievalInterval }} Seconds
-                    </strong>
-                    <span *ngIf="customer.isVip" class="badge bg-danger ms-2">
-                      VIP
-                    </span>
-                  </p>
-                </div>
-                <div class="col-6">
-                  <button
-                    class="btn btn-light"
-                    (click)="editCustomerDetails(customer)"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    class="btn btn-danger mx-3"
-                    (click)="deleteCustomer(customer.customerId)"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
+          Create
+        </button>
+      </form>
 
-        <!-- Edit Customer Details Form -->
-        <div *ngIf="editCustomer" class="w-50 border-start ps-3">
-          <h4>Edit Customer Details</h4>
-          <form (ngSubmit)="updateCustomer()">
-            <!-- Edit Tickets Per Purchase -->
-            <label for="editTicketsPerPurchase" class="form-label">
-              Edit Tickets Per Purchase
-            </label>
-            <div class="form-group mb-3">
-              <input
-                type="number"
-                [(ngModel)]="updatedCustomer.ticketsPerPurchase"
-                name="editTicketsPerPurchase"
-                id="editTicketsPerPurchase"
-                class="form-control"
-                required
-              />
-            </div>
-
-            <!-- Edit Retrieval Interval Slider -->
-            <label for="editRetrievalInterval" class="form-label">
-              Edit Retrieval Interval
-            </label>
-            <div class="form-group">
-              <input
-                type="range"
-                class="form-range"
-                id="editRetrievalInterval"
-                [(ngModel)]="updatedCustomer.retrievalInterval"
-                name="editRetrievalInterval"
-                min="1"
-                max="10"
-                step="1"
-              />
-              <div class="d-flex justify-content-between mt-1">
-                <span>1</span><span>2</span><span>3</span><span>4</span>
-                <span>5</span><span>6</span><span>7</span><span>8</span>
-                <span>9</span><span>10</span>
-              </div>
-              <div class="pt-2 text-center">
-                <span
-                  id="intervalValue"
-                  class="fw-bold d-flex justify-content-center align-items-center"
-                >
-                  <span class="h6 me-2">{{
-                    updatedCustomer.retrievalInterval
-                  }}</span>
-                  <p class="h6 mb-0">Seconds</p>
-                </span>
-              </div>
-            </div>
-
-            <!-- Edit VIP Status with Switch -->
-            <label for="editIsVip" class="form-label">Edit VIP Status</label>
-            <div class="form-check form-switch">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                [(ngModel)]="updatedCustomer.isVip"
-                name="editIsVip"
-                id="editIsVip"
-              />
-              <label class="form-check-label" for="editIsVip">
-                {{
-                  updatedCustomer.isVip
-                    ? "VIP Status: VIP"
-                    : "VIP Status: Regular"
-                }}
-              </label>
-            </div>
-
-            <!-- Submit and Cancel Buttons -->
-            <button type="submit" class="btn btn-success mt-3 mx-3">
-              Update Customer
-            </button>
-            <button class="btn btn-danger mt-3" (click)="cancelEdit()">
-              Cancel
-            </button>
-          </form>
-        </div>
+      <!-- Success Message -->
+      <div
+        *ngIf="isSuccessful"
+        class="alert alert-success mt-4 text-center"
+        role="alert"
+      >
+        {{ responseMessage }}
       </div>
     </div>
   </div>
