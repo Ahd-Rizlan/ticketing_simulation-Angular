@@ -1,227 +1,69 @@
-<div class="container-fluid">
-  <div class="d-flex">
-    <!-- Form Section -->
-    <div class="form-container w-50 me-auto">
-      <div class="container pt-5 pb-5 my-5 border">
-        <div
-          class="d-flex flex-column justify-content-center align-items-center"
-        >
-          <div class="h2">Create Vendor</div>
-          <div class="container pt-4 pb-4 px-5 py-5">
-            <form (ngSubmit)="createVendor()" id="vendorForm">
-              <!-- Number of Tickets Per Release -->
-              <div class="row mb-3">
-                <label
-                  for="inputNumber"
-                  class="col-12 col-form-label"
-                  style="color: #333"
-                >
-                  Number Of Tickets Per Release
-                </label>
-                <div class="col-12">
-                  <input
-                    type="text"
-                    class="form-control form-control-sm"
-                    id="inputNumber"
-                    [(ngModel)]="newVendor.ticketsPerRelease"
-                    name="numberOfTickets"
-                    pattern="^\d+$"
-                    title="Only numeric values are allowed"
-                    required
-                  />
-                  <div class="invalid-feedback">
-                    Please enter a valid number of tickets.
-                  </div>
-                </div>
-              </div>
+<div
+  class="container-fluid d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
+  <div class="form-container w-50">
+    <div class="container border p-5">
+      <div class="text-center mb-4">
+        <h2>Create Vendor</h2>
+      </div>
 
-              <!-- Frequency Slider with Range Value Display -->
-              <div class="row mb-3">
-                <label
-                  for="inputFrequency"
-                  class="col-12 col-form-label"
-                  style="color: #333"
-                >
-                  Frequency
-                </label>
-                <div class="col-12">
-                  <input
-                    type="range"
-                    class="form-range"
-                    id="inputFrequency"
-                    [(ngModel)]="newVendor.frequency"
-                    name="frequency"
-                    min="1"
-                    max="10"
-                    value="5"
-                    step="1"
-                  />
-                  <div class="d-flex justify-content-between">
-                    <span>1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
-                    <span>9</span>
-                    <span>10</span>
-                  </div>
-                  <div class="pt-2 text-center">
-                    <span
-                      id="frequencyValue"
-                      class="fw-bold d-flex justify-content-center align-items-center"
-                    >
-                      <span class="h6 me-2">{{ newVendor.frequency }}</span>
-                      <p class="h6 mb-0">Seconds</p>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Submit Button -->
-              <div class="row mb-3 justify-content-center">
-                <div
-                  class="col-auto"
-                  *ngIf="
-                    newVendor.ticketsPerRelease > 0 && newVendor.frequency > 0
-                  "
-                >
-                  <button type="submit" class="btn btn-primary custom-button">
-                    Create Vendor
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            <!-- Response Message -->
-            <div
-              *ngIf="isSuccessful"
-              class="alert alert-success mt-3"
-              role="alert"
-            >
-              {{ responseMessage }}
-            </div>
+      <form
+        (ngSubmit)="createVendor()"
+        id="vendorForm"
+        class="d-flex flex-column justify-content-center align-items-center"
+      >
+        <!-- Number of Vendors Input -->
+        <div class="row mb-3 w-75">
+          <label for="inputVendors" class="col-form-label text-center">
+            Number of Vendors
+          </label>
+          <input
+            type="number"
+            id="inputVendors"
+            [(ngModel)]="newVendors.numberOfVendors"
+            name="numberOfVendors"
+            class="form-control"
+            min="1"
+            step="1"
+            required
+          />
+          <div class="invalid-feedback">
+            Please enter a valid number of vendors.
           </div>
         </div>
-      </div>
-    </div>
-    <div class="vendor-list-container border-start p-4 text-center">
-      <h3 class="text-center">Vendor List</h3>
-      <div *ngIf="!(vendorList.length > 0)">
-        <h3>No Vendors Found</h3>
-      </div>
 
+        <!-- Total Tickets Per Release Input -->
+        <div class="row mb-3 w-75">
+          <label for="inputTickets" class="col-form-label text-center">
+            Total Tickets Per Release
+          </label>
+          <input
+            type="number"
+            id="inputTickets"
+            [(ngModel)]="newVendors.ticketsPerRelease"
+            name="ticketsPerRelease"
+            class="form-control"
+            min="1"
+            step="1"
+            required
+          />
+          <div class="invalid-feedback">
+            Please enter a valid number of tickets.
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary mt-3">Create</button>
+      </form>
+
+      <!-- Success Message -->
       <div
-        class="d-flex"
-        [ngClass]="{
-          'justify-content-between': editVendor,
-          'justify-content-center': !editVendor
-        }"
+        *ngIf="isSuccessful"
+        class="alert alert-success mt-4 text-center"
+        role="alert"
       >
-        <!-- Vendor List -->
-        <div
-          [class.w-50]="editVendor"
-          [class.w-100]="!editVendor"
-          class="me-3"
-          *ngIf="vendorList.length > 0"
-        >
-          <ul class="list-group" *ngFor="let vendor of vendorList">
-            <li class="list-group-item bg-secondary text-light">
-              <div class="row">
-                <div class="col-6">
-                  <p>
-                    <strong>
-                      {{ vendor.vendorId }} - No Of Tickets Per Release:
-                      {{ vendor.ticketsPerRelease }} - With Frequency Of:
-                      {{ vendor.frequency }} Seconds
-                    </strong>
-                  </p>
-                </div>
-                <div class="col-6">
-                  <button
-                    class="btn btn-light"
-                    (click)="editVendorDetails(vendor)"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    class="btn btn-danger mx-3"
-                    (click)="deleteVendor(vendor.vendorId)"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Edit Vendor Details Form -->
-        <div *ngIf="editVendor" class="w-50 border-start ps-3">
-          <h4>Edit Vendor Details</h4>
-          <form (ngSubmit)="updateVendor()">
-            <!-- Edit Tickets Per Release -->
-            <label for="editTicketsPerRelease" class="form-label"
-              >Edit Tickets Per Release</label
-            >
-            <div class="form-group mb-3">
-              <input
-                type="number"
-                [(ngModel)]="updatedVendor.ticketsPerRelease"
-                name="editTicketsPerRelease"
-                id="editTicketsPerRelease"
-                class="form-control"
-                required
-              />
-            </div>
-
-            <!-- Edit Frequency Slider -->
-            <label for="editFrequency" class="form-label">Edit Frequency</label>
-            <div class="form-group">
-              <input
-                type="range"
-                class="form-range"
-                id="editFrequency"
-                [(ngModel)]="updatedVendor.frequency"
-                name="editFrequency"
-                min="1"
-                max="10"
-                step="1"
-              />
-              <div class="d-flex justify-content-between mt-1">
-                <span>1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-                <span>6</span>
-                <span>7</span>
-                <span>8</span>
-                <span>9</span>
-                <span>10</span>
-              </div>
-              <div class="pt-2 text-center">
-                <span
-                  id="frequencyValue"
-                  class="fw-bold d-flex justify-content-center align-items-center"
-                >
-                  <span class="h6 me-2">{{ updatedVendor.frequency }}</span>
-                  <p class="h6 mb-0">Seconds</p>
-                </span>
-              </div>
-            </div>
-
-            <!-- Submit and Cancel Buttons -->
-            <button type="submit" class="btn btn-success mt-3 mx-3">
-              Update Vendor
-            </button>
-            <button class="btn btn-danger mt-3" (click)="cancelEdit()">
-              Cancel
-            </button>
-          </form>
-        </div>
+        {{ responseMessage }}
       </div>
     </div>
   </div>

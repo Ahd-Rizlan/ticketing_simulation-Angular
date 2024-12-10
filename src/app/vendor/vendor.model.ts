@@ -1,5 +1,6 @@
-export interface Vendor {
-  vendorId?: String;
-  frequency: number;
-  ticketsPerRelease: number;
-}
+// export interface Vendor {
+//   //vendorId?: String;
+//   // frequency: number;
+//   numberOfVendors: number;
+//   ticketsPerRelease: number;
+// }
