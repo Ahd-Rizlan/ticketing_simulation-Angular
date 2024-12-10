@@ -14,8 +14,8 @@ export class VendorComponent {
   constructor(private vendorService: VendorService) {}
 
   newVendors = { numberOfVendors: 0, ticketsPerRelease: 0 };
-  createVendors: number = 0;
-  ticketsPerReleaseBySingleVendor: number = 0;
+  createVendors: number = 0; // To hold the number of vendors
+  ticketsPerReleaseBySingleVendor: number = 0; // To hold the tickets per release
   responseMessage: string = '';
   isSuccessful: boolean = false;
 
@@ -26,14 +26,20 @@ export class VendorComponent {
         this.newVendors.ticketsPerRelease
       )
       .subscribe((createdVendor) => {
+        // Assign the returned data to the local variables
+        console.log(this.newVendors.numberOfVendors);
+
         // Reset the form
         this.newVendors = { numberOfVendors: 0, ticketsPerRelease: 0 };
         this.isSuccessful = true;
-
+        console.log(
+          'Vendor created successfully!' +
+            this.createVendors +
+            ' ' +
+            this.ticketsPerReleaseBySingleVendor
+        );
         // Set the success message (optional, shown in template)
-        this.responseMessage = `Vendor created successfully!  
-                             Tickets per release: ${createdVendor.ticketsPerRelease}., 
-                             Number of Vendors: ${createdVendor.numberOfVendors}.`;
+        this.responseMessage = `Vendors created successfully!`;
       });
   }
 }
