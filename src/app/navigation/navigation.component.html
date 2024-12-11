@@ -1,0 +1,6 @@
+<div class="container">
+  <h2>Navigation</h2>
+  <button (click)="goToVendors()">Create Vendors</button>
+  <button (click)="goToCustomers()">Create Customers</button>
+  <button *ngIf="customersCount > 0" (click)="goToNext()">Next</button>
+</div>

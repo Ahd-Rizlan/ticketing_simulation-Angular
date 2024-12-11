@@ -76,4 +76,8 @@ export class ConfigurationComponent implements OnInit {
       }
     );
   }
+  goToNextStep() {
+    console.log('Navigating to the next step...');
+    // Add navigation logic here.
+  }
 }
