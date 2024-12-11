@@ -1,0 +1,31 @@
+.navbar {
+  font-size: 1.2rem; /* Increase font size */
+  padding: 1rem; /* Add padding for a bigger look */
+  background: linear-gradient(
+    90deg,
+    #007bff,
+    #6610f2
+  ); /* Gradient background */
+  color: white; /* White text */
+}
+.navbar-brand {
+  font-weight: bold;
+  color: white;
+}
+.navbar-brand:hover {
+  color: #f8f9fa; /* Slight hover effect */
+}
+.nav-link {
+  color: white;
+  transition: color 0.3s ease;
+}
+.nav-link:hover,
+.nav-link.active {
+  color: #ffd700; /* Gold color for hover and active links */
+}
+.navbar-toggler {
+  border: 1px solid white; /* White border for toggle button */
+}
+.navbar-toggler-icon {
+  background-color: white; /* White icon */
+}

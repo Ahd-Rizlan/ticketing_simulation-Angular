@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ControlPanelService } from './control-panel.service';
+import { VendorService } from './vendor.service';
 
-describe('ControlPanelService', () => {
-  let service: ControlPanelService;
+describe('VendorService', () => {
+  let service: VendorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ControlPanelService);
+    service = TestBed.inject(VendorService);
   });
 
   it('should be created', () => {
