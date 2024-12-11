@@ -22,7 +22,6 @@ export class ConfigurationComponent implements OnInit {
   isFormValid = false;
   isTotalCapacityValid = true;
   isSubmitting = false;
-  configurationsList: Configuration[] = [];
 
   constructor(private configurationService: ConfigurationService) {}
 
@@ -33,7 +32,6 @@ export class ConfigurationComponent implements OnInit {
   getConfiguration(): void {
     this.configurationService.getConfigurations().subscribe((config) => {
       this.existingConfiguration = config;
-      this.configurationsList.push(config);
     });
   }
 
@@ -48,14 +46,22 @@ export class ConfigurationComponent implements OnInit {
       this.configuration.maxTicketCapacity < this.configuration.totalTickets;
   }
 
-  saveConfiguration(): void {
+  handleSubmit(form: any): void {
+    if (!form.valid) return;
+
     this.isSubmitting = true;
+
+    setTimeout(() => {
+      this.saveConfiguration();
+    }, 1000); // Short delay for animation effect
+  }
+
+  saveConfiguration(): void {
     this.configurationService
       .createOrUpdateConfiguration(this.configuration)
       .subscribe(
         (config) => {
           this.existingConfiguration = config;
-
           this.isSubmitting = false;
         },
         (error) => {
@@ -63,21 +69,5 @@ export class ConfigurationComponent implements OnInit {
           this.isSubmitting = false;
         }
       );
-  }
-  deleteAllConfigurations(): void {
-    this.configurationService.deleteConfiguration().subscribe(
-      () => {
-        this.existingConfiguration = null;
-        this.configurationsList = [];
-        this.getConfiguration();
-      },
-      (error) => {
-        console.error('Error deleting configurations:', error);
-      }
-    );
-  }
-  goToNextStep() {
-    console.log('Navigating to the next step...');
-    // Add navigation logic here.
   }
 }

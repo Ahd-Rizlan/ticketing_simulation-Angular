@@ -10,7 +10,7 @@
 
       <form
         #configForm="ngForm"
-        (ngSubmit)="saveConfiguration()"
+        (ngSubmit)="handleSubmit(configForm)"
         class="d-flex flex-column justify-content-center align-items-center"
       >
         <!-- Total Tickets Input -->
@@ -102,24 +102,21 @@
           type="submit"
           class="btn btn-primary mt-3"
           [disabled]="!isFormValid || isSubmitting"
-          *ngIf="isFormValid && !isSubmitting"
-          (click)="isSubmitting = true"
         >
           Submit
         </button>
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          class="btn btn-primary mt-3"
-          [disabled]="!existingConfiguration"
-          (click)="goToNextStep()"
-        >
-          Next
-        </button>
+
+        <!-- Spinner Animation -->
+        <div *ngIf="isSubmitting" class="text-center mt-3">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
       </form>
     </div>
   </div>
 
+  <!-- Display existing configuration if available -->
   <div
     class="data-container w-25 border p-3 ms-3"
     *ngIf="existingConfiguration"
@@ -128,8 +125,7 @@
       <h3>Available Configuration Data</h3>
     </div>
 
-    <!-- Display existing configuration if available -->
-    <div class="alert alert-secondary mt-4" *ngIf="existingConfiguration">
+    <div class="alert alert-secondary mt-4">
       <h5 class="text-center">Available Configuration</h5>
       <p>
         <strong>Total Tickets:</strong> {{ existingConfiguration.totalTickets }}

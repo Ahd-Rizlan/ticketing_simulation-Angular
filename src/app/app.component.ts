@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+
+import { RouterModule, Routes } from '@angular/router';
 import { VendorComponent } from './vendor/vendor.component';
 import { CommonModule } from '@angular/common';
 import { CustomerComponent } from './customer/customer.component';
@@ -9,6 +10,7 @@ import { ConfigurationComponent } from './configuration/configuration.component'
   selector: 'app-root',
   imports: [
     CommonModule,
+    RouterModule,
     VendorComponent,
     CustomerComponent,
     ConfigurationComponent,
