@@ -1,36 +1,35 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Configuration } from './configuration.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Configuration } from './configuration.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigurationService {
-  apiUrl = 'http://localhost:8080/api/configuration"';
-  constructor(private httpClient: HttpClient) {}
+  private apiUrl = 'http://localhost:8080/api/configuration';
 
-  createConfiguration(
-    newConfiguration: Configuration
+  constructor(private http: HttpClient) {}
+
+  getConfigurations(): Observable<Configuration> {
+    return this.http.get<Configuration>(this.apiUrl);
+  }
+
+  createOrUpdateConfiguration(
+    config: Configuration
   ): Observable<Configuration> {
-    return this.httpClient.post<Configuration>(this.apiUrl, newConfiguration);
+    return this.http.post<Configuration>(this.apiUrl, config, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    });
   }
 
-  getAllConfigurations(): Observable<Configuration> {
-    return this.httpClient.get<Configuration>(this.apiUrl);
+  updateConfiguration(config: Configuration): Observable<Configuration> {
+    return this.http.put<Configuration>(this.apiUrl, config, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    });
   }
 
-  updateConfiguration(
-    ConfigurationId: String,
-    updatedConfiguration: Configuration
-  ): Observable<Configuration> {
-    return this.httpClient.put<Configuration>(
-      this.apiUrl + '/' + ConfigurationId,
-      updatedConfiguration
-    );
-  }
-
-  deleteConfiguration(ConfigurationId: String) {
-    return this.httpClient.delete(this.apiUrl + '/' + ConfigurationId);
+  deleteConfiguration(): Observable<string> {
+    return this.http.delete<string>(this.apiUrl);
   }
 }

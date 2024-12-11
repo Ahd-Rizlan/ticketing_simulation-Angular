@@ -1,5 +1,5 @@
 export interface Configuration {
-  id: string;
+  id?: number;
   totalTickets: number;
   maxTicketCapacity: number;
   ticketReleaseRate: number;

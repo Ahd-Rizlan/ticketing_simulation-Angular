@@ -1,143 +1,79 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ConfigurationService } from './configuration.service';
-
-import { FormsModule } from '@angular/forms';
 import { Configuration } from './configuration.model';
+import { ConfigurationService } from './configuration.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-configuration',
   imports: [CommonModule, FormsModule],
   templateUrl: './configuration.component.html',
-  styleUrl: './configuration.component.css',
+  styleUrls: ['./configuration.component.css'],
 })
 export class ConfigurationComponent implements OnInit {
-  constructor(private ConfigurationService: ConfigurationService) {}
-
-  newConfiguration: Configuration = {
-    id: '1',
+  configuration: Configuration = {
     totalTickets: 0,
     maxTicketCapacity: 0,
-    ticketReleaseRate: 0,
-    customerRetrievalRate: 0,
+    ticketReleaseRate: 1,
+    customerRetrievalRate: 1,
   };
 
-  responceMessage: string = '';
+  existingConfiguration: Configuration | null = null;
+  isFormValid = false;
+  isTotalCapacityValid = true;
+  isSubmitting = false;
+  configurationsList: Configuration[] = [];
 
-  isSuccessful: boolean = false;
+  constructor(private configurationService: ConfigurationService) {}
 
-  ConfigurationList: Configuration[] = [];
-
-  editConfiguration: Configuration | null = null;
-
-  deletedConfiguration: Configuration | null = null;
-
-  updatedConfiguration: Configuration = {
-    id: '1',
-    totalTickets: 0,
-    maxTicketCapacity: 0,
-    ticketReleaseRate: 0,
-    customerRetrievalRate: 0,
-  };
-
-  ngOnInit() {
-    this.getAllConfigurations();
-    console.log('Configuration List:', this.updatedConfiguration);
+  ngOnInit(): void {
+    this.getConfiguration();
   }
 
-  //default pre-setting Values
-  //creating a new method  which returnss nothing and calls the createConfiguration method from the ConfigurationService to create new Configuration
-  //createdConfiguration is the out put from http request which wait and took by subscribe method
-  //and resetted the newConfiguration object to default values
-  createConfiguration() {
-    this.ConfigurationService.createConfiguration(
-      this.newConfiguration
-    ).subscribe((createdConfiguration) => {
-      this.newConfiguration = {
-        id: '1',
-        totalTickets: 0,
-        maxTicketCapacity: 0,
-        ticketReleaseRate: 0,
-        customerRetrievalRate: 0,
-      };
-      this.isSuccessful = true;
-      this.responceMessage = `Configuration  created successfully!  
-                                   Mavimum Event Tickets: ${createdConfiguration.totalTickets}, 
-                                   Maximum Pool Capacity: ${createdConfiguration.maxTicketCapacity},
-                                   Ticket Release Rate: ${createdConfiguration.ticketReleaseRate},
-                                   Customer Retrieval Rate: ${createdConfiguration.customerRetrievalRate}.`;
-      this.ConfigurationList.push(createdConfiguration);
+  getConfiguration(): void {
+    this.configurationService.getConfigurations().subscribe((config) => {
+      this.existingConfiguration = config;
+      this.configurationsList.push(config);
     });
   }
 
-  getAllConfigurations() {
-    this.ConfigurationService.getAllConfigurations().subscribe(
-      (Configurations) => {
-        this.ConfigurationList = this.ConfigurationList.concat(Configurations);
-      }
-    );
+  validateForm(): void {
+    this.isFormValid =
+      this.configuration.totalTickets > 0 &&
+      this.configuration.maxTicketCapacity > 0 &&
+      this.configuration.ticketReleaseRate > 0 &&
+      this.configuration.customerRetrievalRate > 0;
+
+    this.isTotalCapacityValid =
+      this.configuration.maxTicketCapacity < this.configuration.totalTickets;
   }
 
-  //editing the Configuration
-  editConfigurationDetails(Configuration: Configuration) {
-    this.editConfiguration = Configuration; //assigning the Configuration to editConfiguration
-    this.updatedConfiguration = { ...Configuration }; //copy of old Configuration to updatedConfiguration
-  }
+  saveConfiguration(): void {
+    this.isSubmitting = true;
+    this.configurationService
+      .createOrUpdateConfiguration(this.configuration)
+      .subscribe(
+        (config) => {
+          this.existingConfiguration = config;
 
-  // updateConfiguration(): void {
-  //   if (this.editConfiguration) {
-  //     this.ConfigurationService.updateConfiguration(
-  //       this.editConfiguration.id,
-  //       this.updatedConfiguration
-  //     ).subscribe((updatedConfiguration) => {
-  //       const idConfiguration = this.ConfigurationList.findIndex(
-  //         (Configuration) => Configuration.id === updatedConfiguration.id
-  //       );
-  //       if (idConfiguration !== -1) {
-  //         this.ConfigurationList[idConfiguration] = updatedConfiguration;
-  //         //close Form
-  //       }
-
-  //       this.editConfiguration = null;
-  //       this.isSuccessful = true;
-  //       this.responceMessage = `Configuration  created successfully!
-  //                                  Mavimum Event Tickets: ${updatedConfiguration.totalTickets},
-  //                                  Maximum Pool Capacity: ${updatedConfiguration.maxTicketCapacity},
-  //                                  Ticket Release Rate: ${updatedConfiguration.ticketReleaseRate},
-  //                                  Customer Retrieval Rate: ${updatedConfiguration.customerRetrievalRate}.`;
-  //       // this.getAllConfigurations();
-  //     });
-  //   }
-  // }
-  cancelEdit() {
-    this.editConfiguration = null;
-    this.updatedConfiguration = {
-      id: '1',
-      totalTickets: 0,
-      maxTicketCapacity: 0,
-      ticketReleaseRate: 0,
-      customerRetrievalRate: 0,
-    };
-  }
-
-  deleteConfiguration(ConfigurationId: any) {
-    if (confirm('Are you sure you want to delete this Configuration?')) {
-      this.ConfigurationService.deleteConfiguration(ConfigurationId).subscribe(
-        () => {
-          this.ConfigurationList = this.ConfigurationList.filter(
-            (Configuration) => Configuration.id !== ConfigurationId
-          );
-          if (
-            this.editConfiguration &&
-            this.editConfiguration.id === ConfigurationId
-          ) {
-            this.cancelEdit();
-          }
+          this.isSubmitting = false;
+        },
+        (error) => {
+          console.error('Error saving configuration:', error);
+          this.isSubmitting = false;
         }
       );
-      this.deletedConfiguration = null;
-      this.isSuccessful = true;
-      this.responceMessage = `Configuration ID: ${ConfigurationId} deleted successfully!`;
-    }
+  }
+  deleteAllConfigurations(): void {
+    this.configurationService.deleteConfiguration().subscribe(
+      () => {
+        this.existingConfiguration = null;
+        this.configurationsList = [];
+        this.getConfiguration();
+      },
+      (error) => {
+        console.error('Error deleting configurations:', error);
+      }
+    );
   }
 }

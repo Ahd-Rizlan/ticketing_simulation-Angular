@@ -5,98 +5,95 @@
   <div class="form-container w-50">
     <div class="container border p-5">
       <div class="text-center mb-4">
-        <h2>Configuration Form</h2>
+        <h2>Configuration Management</h2>
       </div>
 
       <form
-        (ngSubmit)="createConfiguration()"
-        id="configurationForm"
+        #configForm="ngForm"
+        (ngSubmit)="saveConfiguration()"
         class="d-flex flex-column justify-content-center align-items-center"
       >
-        <!-- Total Capacity Input -->
+        <!-- Total Tickets Input -->
         <div class="row mb-3 w-75">
-          <label for="inputTotalCapacity" class="col-form-label text-center">
-            Total Capacity
-          </label>
+          <label for="totalTickets" class="col-form-label text-center"
+            >Total Tickets</label
+          >
           <input
             type="number"
-            id="inputTotalCapacity"
-            [(ngModel)]="newConfiguration.totalTickets"
-            name="totalCapacity"
+            id="totalTickets"
+            [(ngModel)]="configuration.totalTickets"
+            name="totalTickets"
             class="form-control"
-            min="1"
             required
+            min="1"
+            pattern="^[1-9][0-9]*$"
+            (input)="validateForm()"
           />
-          <div class="invalid-feedback">
-            Please enter a valid total capacity.
+          <div *ngIf="!isTotalCapacityValid" class="invalid-feedback">
+            Maximum Ticket Capacity must be less than Total Tickets!
           </div>
         </div>
 
-        <!-- Maximum Ticket Capacity Input -->
+        <!-- Max Ticket Capacity Input -->
         <div class="row mb-3 w-75">
-          <label for="inputMaxCapacity" class="col-form-label text-center">
-            Maximum Ticket Capacity
-          </label>
+          <label for="maxTicketCapacity" class="col-form-label text-center"
+            >Max Ticket Capacity</label
+          >
           <input
             type="number"
-            id="inputMaxCapacity"
-            [(ngModel)]="newConfiguration.maxTicketCapacity"
+            id="maxTicketCapacity"
+            [(ngModel)]="configuration.maxTicketCapacity"
             name="maxTicketCapacity"
             class="form-control"
-            [max]="newConfiguration.totalTickets"
-            min="1"
             required
+            min="1"
+            max="{{ configuration.totalTickets }}"
+            pattern="^[1-9][0-9]*$"
+            (input)="validateForm()"
           />
-          <div class="invalid-feedback">
-            Maximum capacity must be less than or equal to total capacity.
-          </div>
         </div>
 
-        <!-- Purchase Rate Input -->
+        <!-- Ticket Release Rate Input -->
         <div class="row mb-3 w-75">
-          <label for="inputPurchaseRate" class="col-form-label text-center">
-            Purchase Rate (1 to 10)
-          </label>
+          <label for="ticketReleaseRate" class="col-form-label text-center"
+            >Ticket Release Rate</label
+          >
           <input
             type="range"
-            id="inputPurchaseRate"
-            [(ngModel)]="newConfiguration.customerRetrievalRate"
-            name="purchaseRate"
+            id="ticketReleaseRate"
+            [(ngModel)]="configuration.ticketReleaseRate"
+            name="ticketReleaseRate"
             class="form-range"
+            required
             min="1"
             max="10"
             step="1"
-            required
+            (input)="validateForm()"
           />
           <div class="text-center mt-2">
-            <span
-              >Selected Purchase Rate:
-              {{ newConfiguration.customerRetrievalRate }}</span
-            >
+            <span>{{ configuration.ticketReleaseRate }}</span>
           </div>
         </div>
 
-        <!-- Retrieval Rate Input -->
+        <!-- Customer Retrieval Rate Input -->
         <div class="row mb-3 w-75">
-          <label for="inputRetrievalRate" class="col-form-label text-center">
-            Retrieval Rate (1 to 10)
-          </label>
+          <label for="customerRetrievalRate" class="col-form-label text-center"
+            >Customer Retrieval Rate</label
+          >
           <input
             type="range"
-            id="inputRetrievalRate"
-            [(ngModel)]="newConfiguration.ticketReleaseRate"
-            name="retrievalRate"
+            id="customerRetrievalRate"
+            [(ngModel)]="configuration.customerRetrievalRate"
+            name="customerRetrievalRate"
             class="form-range"
+            required
             min="1"
             max="10"
             step="1"
-            required
+            (input)="validateForm()"
           />
           <div class="text-center mt-2">
-            <span
-              >Selected Retrieval Rate:
-              {{ newConfiguration.ticketReleaseRate }}</span
-            >
+            <span>{{ configuration.customerRetrievalRate }}</span>
           </div>
         </div>
 
@@ -104,40 +101,42 @@
         <button
           type="submit"
           class="btn btn-primary mt-3"
-          *ngIf="
-            newConfiguration.totalTickets > 0 &&
-            newConfiguration.maxTicketCapacity > 0 &&
-            newConfiguration.customerRetrievalRate > 0 &&
-            newConfiguration.ticketReleaseRate > 0
-          "
+          [disabled]="!isFormValid || isSubmitting"
+          *ngIf="isFormValid && !isSubmitting"
+          (click)="isSubmitting = true"
         >
-          Create Configuration
+          Submit
         </button>
       </form>
-
-      <!-- Success Message -->
-      <div
-        *ngIf="isSuccessful"
-        class="alert alert-success mt-4 text-center"
-        role="alert"
-      >
-        {{ responceMessage }}
-      </div>
     </div>
   </div>
 
-  <!-- Available Data Section -->
   <div
     class="data-container w-25 border p-3 ms-3"
-    *ngIf="ConfigurationList.length > 0"
+    *ngIf="existingConfiguration"
   >
     <div class="text-center mb-4">
       <h3>Available Configuration Data</h3>
     </div>
-    <ul class="list-group">
-      <li *ngFor="let data of ConfigurationList" class="list-group-item">
-        {{ data }}
-      </li>
-    </ul>
+
+    <!-- Display existing configuration if available -->
+    <div class="alert alert-secondary mt-4" *ngIf="existingConfiguration">
+      <h5 class="text-center">Available Configuration</h5>
+      <p>
+        <strong>Total Tickets:</strong> {{ existingConfiguration.totalTickets }}
+      </p>
+      <p>
+        <strong>Max Ticket Capacity:</strong>
+        {{ existingConfiguration.maxTicketCapacity }}
+      </p>
+      <p>
+        <strong>Ticket Release Rate:</strong>
+        {{ existingConfiguration.ticketReleaseRate }}
+      </p>
+      <p>
+        <strong>Customer Retrieval Rate:</strong>
+        {{ existingConfiguration.customerRetrievalRate }}
+      </p>
+    </div>
   </div>
 </div>
