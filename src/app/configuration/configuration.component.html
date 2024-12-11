@@ -1,0 +1,143 @@
+<div
+  class="container-fluid d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
+  <div class="form-container w-50">
+    <div class="container border p-5">
+      <div class="text-center mb-4">
+        <h2>Configuration Form</h2>
+      </div>
+
+      <form
+        (ngSubmit)="createConfiguration()"
+        id="configurationForm"
+        class="d-flex flex-column justify-content-center align-items-center"
+      >
+        <!-- Total Capacity Input -->
+        <div class="row mb-3 w-75">
+          <label for="inputTotalCapacity" class="col-form-label text-center">
+            Total Capacity
+          </label>
+          <input
+            type="number"
+            id="inputTotalCapacity"
+            [(ngModel)]="newConfiguration.totalTickets"
+            name="totalCapacity"
+            class="form-control"
+            min="1"
+            required
+          />
+          <div class="invalid-feedback">
+            Please enter a valid total capacity.
+          </div>
+        </div>
+
+        <!-- Maximum Ticket Capacity Input -->
+        <div class="row mb-3 w-75">
+          <label for="inputMaxCapacity" class="col-form-label text-center">
+            Maximum Ticket Capacity
+          </label>
+          <input
+            type="number"
+            id="inputMaxCapacity"
+            [(ngModel)]="newConfiguration.maxTicketCapacity"
+            name="maxTicketCapacity"
+            class="form-control"
+            [max]="newConfiguration.totalTickets"
+            min="1"
+            required
+          />
+          <div class="invalid-feedback">
+            Maximum capacity must be less than or equal to total capacity.
+          </div>
+        </div>
+
+        <!-- Purchase Rate Input -->
+        <div class="row mb-3 w-75">
+          <label for="inputPurchaseRate" class="col-form-label text-center">
+            Purchase Rate (1 to 10)
+          </label>
+          <input
+            type="range"
+            id="inputPurchaseRate"
+            [(ngModel)]="newConfiguration.customerRetrievalRate"
+            name="purchaseRate"
+            class="form-range"
+            min="1"
+            max="10"
+            step="1"
+            required
+          />
+          <div class="text-center mt-2">
+            <span
+              >Selected Purchase Rate:
+              {{ newConfiguration.customerRetrievalRate }}</span
+            >
+          </div>
+        </div>
+
+        <!-- Retrieval Rate Input -->
+        <div class="row mb-3 w-75">
+          <label for="inputRetrievalRate" class="col-form-label text-center">
+            Retrieval Rate (1 to 10)
+          </label>
+          <input
+            type="range"
+            id="inputRetrievalRate"
+            [(ngModel)]="newConfiguration.ticketReleaseRate"
+            name="retrievalRate"
+            class="form-range"
+            min="1"
+            max="10"
+            step="1"
+            required
+          />
+          <div class="text-center mt-2">
+            <span
+              >Selected Retrieval Rate:
+              {{ newConfiguration.ticketReleaseRate }}</span
+            >
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-primary mt-3"
+          *ngIf="
+            newConfiguration.totalTickets > 0 &&
+            newConfiguration.maxTicketCapacity > 0 &&
+            newConfiguration.customerRetrievalRate > 0 &&
+            newConfiguration.ticketReleaseRate > 0
+          "
+        >
+          Create Configuration
+        </button>
+      </form>
+
+      <!-- Success Message -->
+      <div
+        *ngIf="isSuccessful"
+        class="alert alert-success mt-4 text-center"
+        role="alert"
+      >
+        {{ responceMessage }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Available Data Section -->
+  <div
+    class="data-container w-25 border p-3 ms-3"
+    *ngIf="ConfigurationList.length > 0"
+  >
+    <div class="text-center mb-4">
+      <h3>Available Configuration Data</h3>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let data of ConfigurationList" class="list-group-item">
+        {{ data }}
+      </li>
+    </ul>
+  </div>
+</div>
