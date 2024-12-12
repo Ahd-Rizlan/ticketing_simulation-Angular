@@ -4,7 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { VendorComponent } from './vendor/vendor.component';
 import { CommonModule } from '@angular/common';
 import { CustomerComponent } from './customer/customer.component';
+
 import { ConfigurationComponent } from './configuration/configuration.component';
+import { webSocket } from 'rxjs/webSocket';
 
 @Component({
   selector: 'app-root',

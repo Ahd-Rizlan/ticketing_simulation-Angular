@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './vendor.component.html',
-  styleUrl: './vendor.component.css',
 })
 export class VendorComponent {
   constructor(private vendorService: VendorService) {}

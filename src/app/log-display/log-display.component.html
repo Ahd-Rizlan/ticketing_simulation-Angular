@@ -1,0 +1,11 @@
+<div class="log-display">
+  <h3 class="mb-3 text-center text-primary">Simulation Logs</h3>
+  <div class="logs-container bg-light p-3 rounded shadow-sm">
+    <div
+      *ngFor="let log of messages"
+      class="log-entry mb-2 p-2 border rounded bg-white"
+    >
+      {{ log }}
+    </div>
+  </div>
+</div>

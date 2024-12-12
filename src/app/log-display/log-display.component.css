@@ -1,0 +1,12 @@
+/* log-display.component.css */
+.log-entry {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  word-wrap: break-word;
+  color: #333;
+}
+
+.logs-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
