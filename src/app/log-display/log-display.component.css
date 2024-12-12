@@ -1,6 +1,6 @@
 /* log-display.component.css */
 .log-entry {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   font-size: 14px;
   word-wrap: break-word;
   color: #333;
@@ -8,5 +8,42 @@
 
 .logs-container {
   max-height: 400px;
+  overflow-y: auto;
+}
+.container-fluid {
+  min-height: 100vh; /* Set minimum height for the container */
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  margin-bottom: 20px; /* Add some spacing between rows */
+}
+
+.log-display {
+  background-color: #f0f0f0; /* Light background for log display */
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: 400px; /* Adjust height as needed */
+  overflow-y: auto;
+}
+
+/* Optional: Add some styling to the buttons */
+.btn-primary {
+  background-color: #007bff; /* Customize button colors */
+  border-color: #007bff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.log-display {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: 400px;
   overflow-y: auto;
 }

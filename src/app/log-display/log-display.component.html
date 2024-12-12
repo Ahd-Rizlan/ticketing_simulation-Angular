@@ -1,11 +1,24 @@
-<div class="log-display">
-  <h3 class="mb-3 text-center text-primary">Simulation Logs</h3>
-  <div class="logs-container bg-light p-3 rounded shadow-sm">
-    <div
-      *ngFor="let log of messages"
-      class="log-entry mb-2 p-2 border rounded bg-white"
-    >
-      {{ log }}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="log-display">
+        <h3 class="mb-3 text-center text-primary">Simulation Logs</h3>
+        <div class="row justify-content-center mt-3">
+          <div class="col-md-4 text-center">
+            <div class="p-2">
+              <app-Button></app-Button>
+            </div>
+          </div>
+        </div>
+        <div class="logs-container bg-light p-3 rounded shadow-sm">
+          <div
+            *ngFor="let message of messages"
+            class="log-entry mb-2 p-2 border rounded bg-white"
+          >
+            {{ message }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
